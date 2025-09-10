@@ -1,0 +1,46 @@
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - GENERIC_TIMEZONE=Europe/Moscow
+      - TZ=Europe/Moscow
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./workspace:/workspace
+    depends_on:
+      - neo4j
+      - calc
+
+  neo4j:
+    image: neo4j:5.20
+    container_name: neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=${NEO4J_AUTH}
+      - NEO4J_server_memory_pagecache_size=512M
+      - NEO4J_server_memory_heap_initial__size=512M
+      - NEO4J_server_memory_heap_max__size=512M
+    volumes:
+      - neo4j_data:/data
+
+  calc:
+    build: ./services/calc_service
+    container_name: calc
+    ports:
+      - "8000:8000"
+    environment:
+      - WORKDIR=/workspace
+    volumes:
+      - ./workspace:/workspace
+
+volumes:
+  n8n_data:
+  neo4j_data:
