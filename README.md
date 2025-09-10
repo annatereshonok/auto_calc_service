@@ -103,7 +103,7 @@ docker compose up -d --build
   ```json
   {
     "image_path": "/workspace/plots/plot_....png",
-    "search_dir": "/workspace/reference_images",
+    "search_dir": "/workspace/plots",
     "top_k": 5
   }
   ```
